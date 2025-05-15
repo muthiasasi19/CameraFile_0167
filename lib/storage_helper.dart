@@ -9,4 +9,12 @@ class StorageHelper {
     if (!await dir.exists()) await dir.create(recursive: true);
     return dir.path;
   }
+
+  static Future<File> saveImage(File file, String prefix) async {
+    final String dirPath = await _getFolderPath();
+    final String fileName =
+        '$prefix${DateTime.now().millisecondsSinceEpoch}${path.extension(file.path)}';
+    final String savedPath = path.join(dirPath, fileName);
+    return await file.copy(savedPath);
+  }
 }
