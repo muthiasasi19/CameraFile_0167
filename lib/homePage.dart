@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:camerafile/camera_page.dart';
-import 'package:camerafile/storage/storage_helper.dart';
+import 'package:camerafile/storage/Storage_Helper.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:image_picker/image_picker.dart';

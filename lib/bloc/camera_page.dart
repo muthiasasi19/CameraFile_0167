@@ -1,10 +1,11 @@
-import 'package:camera/camera.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:camerafile/bloc/camera_bloc.dart';
-import 'package:camerafile/camera_page.dart';
+import 'dart:io';
 
-class CamarePage extends StatefulWidget {
+import 'package:camera/camera.dart';
+import 'package:camerafile/bloc/camera_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter/material.dart';
+
+class CameraPage extends StatefulWidget {
   const CameraPage({super.key});
 
   @override
@@ -21,7 +22,7 @@ class _CameraPageState extends State<CameraPage> {
     }
   }
 
-  IconData _flashIcon(FlashMode mode) {
+  IconData _flasIcon(FlashMode mode) {
     return switch (mode) {
       FlashMode.auto => Icons.flash_auto,
       FlashMode.always => Icons.flash_on,
@@ -45,7 +46,6 @@ class _CameraPageState extends State<CameraPage> {
     );
   }
 
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
@@ -63,11 +63,8 @@ class _CameraPageState extends State<CameraPage> {
                   GestureDetector(
                     onTapDown: (details) {
                       context.read<CameraBloc>().add(
-                            TapToFocul(
-                              details.localPosition,
-                              constraints.biggest,
-                            ),
-                          );
+                        TapToFocus(details.localPosition, constraints.biggest),
+                      );
                     },
                     child: CameraPreview(state.controller),
                   ),
@@ -80,7 +77,7 @@ class _CameraPageState extends State<CameraPage> {
                           context.read<CameraBloc>().add(SwitchCamera());
                         }),
                         const SizedBox(height: 12),
-                        _circleButton(_flashIcon(state.flashMode), () {
+                        _circleButton(_flasIcon(state.flashMode), () {
                           context.read<CameraBloc>().add(ToggleFlash());
                         }),
                       ],
@@ -95,12 +92,13 @@ class _CameraPageState extends State<CameraPage> {
                         backgroundColor: Colors.white,
                         onPressed: () {
                           context.read<CameraBloc>().add(
-                                TakePicture(
-                                  (file) => Navigator.pop(context, file),
-                                ),
-                              );
+                            TakePicture((file) => Navigator.pop(context, file)),
+                          );
                         },
-                        child: const Icon(Icons.camera_alt, color: Colors.black),
+                        child: const Icon(
+                          Icons.camera_alt,
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ),
