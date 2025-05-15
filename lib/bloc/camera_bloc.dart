@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:camera/camera.dart';
-import 'package:camerafile/bloc/camera_page.dart';
-import 'package:camerafile/storage_helper.dart';
+import 'package:camerafile/camera_page.dart';
+import 'package:camerafile/storage/storage_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';

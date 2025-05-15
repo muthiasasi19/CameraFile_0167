@@ -1,9 +1,10 @@
 import 'package:camera/camera.dart';
-import 'package:camerafile/bloc/camera_bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:camerafile/bloc/camera_bloc.dart';
+import 'package:camerafile/camera_page.dart';
 
-class CameraPage extends StatefulWidget {
+class CamarePage extends StatefulWidget {
   const CameraPage({super.key});
 
   @override
@@ -20,7 +21,7 @@ class _CameraPageState extends State<CameraPage> {
     }
   }
 
-  IconData _flasIcon(FlashMode mode) {
+  IconData _flashIcon(FlashMode mode) {
     return switch (mode) {
       FlashMode.auto => Icons.flash_auto,
       FlashMode.always => Icons.flash_on,
@@ -44,12 +45,70 @@ class _CameraPageState extends State<CameraPage> {
     );
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Dashboard"), actions: const []),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(10.0),
-        child: Column(children: []),
+      backgroundColor: Colors.black,
+      body: BlocBuilder<CameraBloc, CameraState>(
+        builder: (context, state) {
+          if (state is! CameraReady) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              return Stack(
+                fit: StackFit.expand,
+                children: [
+                  GestureDetector(
+                    onTapDown: (details) {
+                      context.read<CameraBloc>().add(
+                            TapToFocul(
+                              details.localPosition,
+                              constraints.biggest,
+                            ),
+                          );
+                    },
+                    child: CameraPreview(state.controller),
+                  ),
+                  Positioned(
+                    top: 50,
+                    right: 20,
+                    child: Column(
+                      children: [
+                        _circleButton(Icons.flip_camera_android, () {
+                          context.read<CameraBloc>().add(SwitchCamera());
+                        }),
+                        const SizedBox(height: 12),
+                        _circleButton(_flashIcon(state.flashMode), () {
+                          context.read<CameraBloc>().add(ToggleFlash());
+                        }),
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 40,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: FloatingActionButton(
+                        backgroundColor: Colors.white,
+                        onPressed: () {
+                          context.read<CameraBloc>().add(
+                                TakePicture(
+                                  (file) => Navigator.pop(context, file),
+                                ),
+                              );
+                        },
+                        child: const Icon(Icons.camera_alt, color: Colors.black),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          );
+        },
       ),
     );
   }
