@@ -1,6 +1,5 @@
-part of 'bloc_bloc.dart';
+part of 'camera_bloc.dart';
 
-@immutable
-sealed class BlocState {}
+sealed class CameraState {}
 
-final class BlocInitial extends BlocState {}
+final class CameraInitial extends CameraState {}
