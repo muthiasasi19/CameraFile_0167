@@ -61,4 +61,25 @@ class _CameraPageState extends State<CameraPage> {
       });
     }
   }
+
+  Future<void> _captureImage() async {
+    final XFile file = await _controller!.takePicture();
+    Navigator.pop(context, File(file.path));
+  }
+
+  void _switchCamera() async {
+    final nextIndex = (_selectedCameraIdx + 1) % _cameras.length;
+    await _setupCamera(nextIndex);
+  }
+
+  void _toogleFlash() async {
+    FlashMode next =
+        _flashMode == FlashMode.off
+            ? FlashMode.auto
+            : _flashMode == FlashMode.auto
+            ? FlashMode.always
+            : FlashMode.off;
+    await _controller!.setFlashMode(next);
+    setState(() => _flashMode = next);
+  }
 }
