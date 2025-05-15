@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:camera/camera.dart';
-import 'package:camerafile/camera_page.dart';
+import 'package:camerafile/bloc/camera_page.dart';
 import 'package:camerafile/storage/Storage_Helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
