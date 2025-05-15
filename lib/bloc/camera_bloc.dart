@@ -1,0 +1,29 @@
+import 'dart:io';
+import 'package:bloc/bloc.dart';
+import 'package:camera/camera.dart';
+import 'package:camerafile/bloc/camera_page.dart';
+import 'package:camerafile/storage_helper.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+part 'camera_event.dart';
+part 'camera_state.dart';
+
+class CameraBloc extends Bloc<CameraEvent, CameraState> {
+  late final List<CameraDescription> _cameras;
+
+  CameraBloc() : super(CameraInitial()) {
+    on<InitializeCamera>(_onInit);
+    on<SwitchCamera>(_onSwitch);
+    on<ToggleFlash>(_onToggleFlash);
+    on<TakePicture>(_onTakePicture);
+    on<TapToFocus>(_onTapFocus);
+    on<PickImageFromGallery>(_onPickGallery);
+    on<OpenCameraAndCapture>(_onOpenCamera);
+    on<DeleteImage>(_onDeleteImage);
+    on<ClearSnackbar>(_onClearSnackbar);
+    on<RequestPermissions>(_onRequestPermissions);
+  }
+}
