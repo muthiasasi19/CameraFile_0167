@@ -148,4 +148,61 @@ class CameraBloc extends Bloc<CameraEvent, CameraState> {
     final s = state as CameraReady;
     emit(s.copyWith(clearSnackbar: true));
   }
+
+  Future<void> _setupController(
+    int index,
+    Emitter<CameraState> emit, {
+    CameraReady? previous,
+  }) async {
+    await previous?.controller.dispose();
+    final controller = CameraController(
+      _cameras[index],
+      ResolutionPreset.max,
+      enableAudio: false,
+    );
+    await controller.initialize();
+    await controller.setFlashMode(previous?.flashMode ?? FlashMode.off);
+
+    emit(
+      CameraReady(
+        controller: controller,
+        selectedIndex: index,
+        flashMode: previous?.flashMode ?? FlashMode.off,
+        imageFile: previous?.imageFile,
+        snackbarMessage: null,
+      ),
+    );
+  }
+
+  @override
+  Future<void> close() async {
+    if (state is CameraReady) {
+      await (state as CameraReady).controller.dispose();
+    }
+    return super.close();
+  }
+
+  Future<void> _onRequestPermissions(
+    RequestPermissions event,
+    Emitter<CameraState> emit,
+  ) async {
+    final statuses =
+        await [
+          Permission.camera,
+          Permission.storage,
+          Permission.manageExternalStorage,
+        ].request();
+
+    final denied = statuses.entries.where((e) => !e.value.isGranted).toList();
+
+    if (denied.isNotEmpty) {
+      if (state is CameraReady) {
+        emit(
+          (state as CameraReady).copyWith(
+            snackbarMessage: 'Izin kamera atau penyimpanan ditolak.',
+          ),
+        );
+      }
+    }
+  }
 }
