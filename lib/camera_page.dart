@@ -179,4 +179,39 @@ class _CameraPageState extends State<CameraPage> {
       ),
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body:
+          (_controller?.value.isInitialized ?? false)
+              ? LayoutBuilder(
+                builder: (context, constraints) {
+                  return Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      GestureDetector(
+                        onTapDown: (d) => _handleTap(d, constraints),
+                        child: CameraPreview(_controller!),
+                      ),
+                      Positioned(
+                        top: 50,
+                        right: 20,
+                        child: Column(
+                          children: [
+                            _circleButton(
+                              Icons.flip_camera_android,
+                              _switchCamera,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              )
+              : const Center(child: CircularProgressIndicator()),
+    );
+  }
 }
